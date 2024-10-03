@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title> space wrap </title>
+    <title>Phase Portrait</title>
     <style>
         #consoleFrame {
             display: flex;
@@ -30,30 +30,20 @@
 </head>
 
 <body>
-    <div> Write function about x and y. it should return newX and newY<br>
-        JavaScript grammar is applied.<br>
-        Watch out divide by zero.
+    <div> x' = Ax에서 matrix A를 입력하시오.
     </div>
 
     <div></br></div>
     <div id="consoleFrame">
         <div id="equationFrame">
-            <div>function transfrom(x,y){</div>
-            <div>&emsp;var newX = 0, newY = 0;</div>
             <span>&emsp;</span><textarea name="" id="eqTag" cols="30" rows="5"></textarea>
-            <div>&emsp;return [newX, newY]</div>
-            <div>}</div>
         </div>
         <div id="buttonFrame" onclick="apply(event)">
             <button>Apply</button>
         </div>
-        <div>
-            newX = 1+x*x-y*y
-            newY = 2*x*y
-        </div>
     </div>
 
-    <canvas width="600" height="600" id="cnv"></canvas>
+    <canvas width="300" height="300" id="cnv"></canvas>
     <script>
         const sin = Math.sin
         const cos = Math.cos
