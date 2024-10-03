@@ -30,17 +30,14 @@
 </head>
 
 <body>
-    <div> x' = Ax에서 matrix A를 입력하시오.
-    </div>
+    <div>Give me matrix A in x' = Ax.</div>
 
     <div></br></div>
-    <div id="consoleFrame">
-        <div id="equationFrame">
-            <span>&emsp;</span><textarea name="" id="eqTag" cols="30" rows="5"></textarea>
-        </div>
-        <div id="buttonFrame" onclick="apply(event)">
-            <button>Apply</button>
-        </div>
+    <div id="equationFrame">
+        <span>&emsp;</span><textarea name="" id="eqTag" cols="30" rows="5"></textarea>
+    </div>
+    <div id="buttonFrame" onclick="apply(event)">
+        <button>Apply</button>
     </div>
 
     <canvas width="300" height="300" id="cnv"></canvas>
