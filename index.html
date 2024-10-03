@@ -4,65 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phase Portrait Visualization</title>
-    <!-- Plotly.js for graph visualization -->
+    <!-- Load Plotly.js for graph visualization -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
+            margin: 0;
+            padding: 20px;
             background-color: #f4f4f4;
+        }
+        #input-section {
+            margin-bottom: 20px;
+        }
+        #input-section label, #input-section input {
+            font-size: 16px;
         }
         #graph-container {
             width: 80%;
             height: 80%;
         }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
     </style>
 </head>
 <body>
 
+    <h1>Phase Portrait Visualization</h1>
+
+    <!-- Input section for matrix A -->
+    <div id="input-section">
+        <label for="matrixA">Enter Matrix A (in CSV format, 2x2): </label>
+        <input type="text" id="matrixA" value="1,-1,1,3" size="20">
+        <button onclick="generatePhasePortrait()">Generate Phase Portrait</button>
+    </div>
+
+    <!-- Graph container -->
     <div id="graph-container"></div>
 
     <script>
-        // Define example data for phase portrait
-        var x = [0, 1, 2, 3, 4, 5, 6];
-        var y = [0, 1, 0.5, -1, -1.5, -0.5, 0.5];
+        // Function to compute the derivative based on matrix A
+        function dynamicsStateSpace(x, A) {
+            var dxdt = [
+                A[0] * x[0] + A[1] * x[1],
+                A[2] * x[0] + A[3] * x[1]
+            ];
+            return dxdt;
+        }
 
-        // Create a trace for the phase portrait
-        var trace = {
-            x: x,
-            y: y,
-            mode: 'lines+markers',
-            type: 'scatter',
-            name: 'Phase Space Trajectory',
-            line: { color: 'blue' },
-            marker: { size: 6 }
+        // Function to generate phase portrait
+        function generatePhasePortrait() {
+            // Get the input matrix A
+            var matrixInput = document.getElementById("matrixA").value;
+            var A = matrixInput.split(",").map(Number); // Convert CSV input to array
+
+            // Define the grid of points for phase portrait
+            var x0 = numeric.linspace(-2, 2, 20);
+            var x1 = numeric.linspace(-2, 3, 20);
+
+            var X0 = [];
+            var X1 = [];
+            var dX0 = [];
+            var dX1 = [];
+
+            // Create grid and compute the state space derivatives
+            for (var i = 0; i < x0.length; i++) {
+                for (var j = 0; j < x1.length; j++) {
+                    var dxdt = dynamicsStateSpace([x0[i], x1[j]], A);
+                    X0.push(x0[i]);
+                    X1.push(x1[j]);
+                    dX0.push(dxdt[0]);
+                    dX1.push(dxdt[1]);
+                }
+            }
+
+            // Plot the phase portrait using quiver
+            var quiverData = {
+                type: 'scatter',
+                mode: 'lines',
+                x: X0,
+                y: X1,
+                line: {color: 'blue'},
+                name: 'Phase Portrait'
+            };
+
+            var layout = {
+                title: 'Phase Portrait',
+                xaxis: {title: '$x_{1}$', zeroline: false},
+                yaxis: {title: '$x_{2}$', zeroline: false},
+                showlegend: false
+            };
+
+            Plotly.newPlot('graph-container', [quiverData], layout);
+        }
+
+        // Helper library for numerical operations (numeric.js)
+        // numeric.linspace equivalent to numpy's linspace
+        var numeric = {
+            linspace: function(a, b, n) {
+                var result = [];
+                var step = (b - a) / (n - 1);
+                for (var i = 0; i < n; i++) {
+                    result.push(a + (step * i));
+                }
+                return result;
+            }
         };
-
-        // Define layout for the graph
-        var layout = {
-            title: 'Phase Portrait',
-            xaxis: {
-                title: 'Position',
-                zeroline: false
-            },
-            yaxis: {
-                title: 'Velocity',
-                zeroline: false
-            },
-            showlegend: false
-        };
-
-        // Plot the graph inside the container
-        Plotly.newPlot('graph-container', [trace], layout);
     </script>
 
 </body>
